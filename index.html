@@ -1,10 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>鹿兒島天文館美食與住宿地圖</title>
-    <!-- 引入 Tailwind CSS 進行版面美化 -->
+    <!-- 引入 Tailwind CSS 進行網頁美化 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Leaflet 地圖套件 CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -13,7 +14,7 @@
         body {
             font-family: 'Noto Sans TC', sans-serif;
         }
-        /* 自訂地圖標記樣式 */
+        /* 自訂地圖數字標記樣式 */
         .custom-marker {
             color: white;
             font-weight: 700;
@@ -28,14 +29,13 @@
             font-size: 14px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
-        .marker-food { background-color: #ef4444; } /* 紅色系代表美食 */
-        .marker-hotel { background-color: #3b82f6; } /* 藍色系代表住宿 */
+        .marker-food { background-color: #ef4444; } /* 紅色代表美食 */
+        .marker-hotel { background-color: #3b82f6; } /* 藍色代表住宿 */
         
-        /* 隱藏地圖預設的某些輪廓線 */
         .leaflet-container *:focus {
             outline: none;
         }
-        /* 美化捲軸 */
+        /* 美化側邊欄捲軸 */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -53,56 +53,121 @@
 </head>
 <body class="flex flex-col md:flex-row h-screen bg-gray-50 overflow-hidden">
 
-    <!-- 側邊欄：地點清單 -->
+    <!-- 左側邊欄：地點清單 -->
     <div class="w-full md:w-1/3 lg:w-1/4 h-2/5 md:h-full bg-white shadow-xl z-20 flex flex-col overflow-hidden relative">
         <div class="p-5 bg-gradient-to-r from-orange-600 to-red-500 text-white shadow-md flex-shrink-0">
             <h1 class="text-xl font-bold tracking-wider">鹿兒島天文館地圖</h1>
             <p class="text-sm opacity-90 mt-1">必吃黑豚美食與住宿精選</p>
         </div>
         <div class="flex-1 overflow-y-auto p-4 space-y-3" id="place-list">
-            <!-- 清單項目將由 JavaScript 動態生成 -->
+            <!-- 清單項目由 JavaScript 動態生成 -->
         </div>
     </div>
 
-    <!-- 地圖容器 -->
+    <!-- 右側：地圖容器 -->
     <div id="map" class="w-full md:w-2/3 lg:w-3/4 h-3/5 md:h-full z-10"></div>
 
     <!-- 引入 Leaflet 地圖套件 JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // 定義地點資料、經緯度以及 Google Maps 搜尋連結
+        // 完整精確地點資料、經緯度以及真實 Google Maps 導航網址
         const places = [
-            { id: 1, name: "とんかつ 丸一", desc: "厚切黑豚炸豬排 (排隊名店)", lat: 31.5877, lng: 130.5544, type: "food", gmapUrl: "https://www.google.com/maps/search/?api=1&query=とんかつ丸一+鹿児島" },
-            { id: 2, name: "あぢもり", desc: "黑豚涮涮鍋發源地", lat: 31.59065, lng: 130.55507, type: "food", gmapUrl: "https://www.google.com/maps/search/?api=1&query=黒豚料理あぢもり+鹿児島" },
-            { id: 3, name: "遊食豚彩 いちにぃさん", desc: "蕎麥高湯黑豚涮涮鍋 (天文館店)", lat: 31.5891, lng: 130.5545, type: "food", gmapUrl: "https://www.google.com/maps/search/?api=1&query=遊食豚彩いちにぃさん+天文館店" },
-            { id: 4, name: "鹿児島ラーメン 豚とろ", desc: "入口即化豬頰肉拉麵 (天文館本店)", lat: 31.58802, lng: 130.553272, type: "food", gmapUrl: "https://www.google.com/maps/search/?api=1&query=鹿児島ラーメン豚とろ+天文館本店" },
-            { id: 5, name: "こむらさき", desc: "老字號清爽白湯拉麵 (天文館店)", lat: 31.5898, lng: 130.5562, type: "food", gmapUrl: "https://www.google.com/maps/search/?api=1&query=ラーメン専門店こむらさき+天文館店" },
-            { id: 6, name: "天文館 吾愛人 本店", desc: "經典鄉土料理與關東煮", lat: 31.591243, lng: 130.553887, type: "food", gmapUrl: "https://www.google.com/maps/search/?api=1&query=天文館吾愛人+本店" },
-            { id: 7, name: "天文館むじゃき 本店", desc: "白熊刨冰發源地 (打卡名店)", lat: 31.589245, lng: 130.555953, type: "food", gmapUrl: "https://www.google.com/maps/search/?api=1&query=天文館むじゃき+本店" },
-            { id: 8, name: "ホテル グランセレッソ", desc: "鹿兒島天文館住宿", lat: 31.5878, lng: 130.5562, type: "hotel", gmapUrl: "https://www.google.com/maps/search/?api=1&query=ホテルグランセレッソ鹿児島天文館" }
+            { 
+                id: 1, 
+                name: "とんかつ 丸一", 
+                desc: "厚切黑豚炸豬排 (排隊名店)", 
+                lat: 31.587396, 
+                lng: 130.553955, 
+                type: "food", 
+                gmapUrl: "https://www.google.com/maps/search/?api=1&query=とんかつ+丸一+鹿児島" 
+            },
+            { 
+                id: 2, 
+                name: "あぢもり", 
+                desc: "黑豚涮涮鍋發源地", 
+                lat: 31.589689, 
+                lng: 130.555234, 
+                type: "food", 
+                gmapUrl: "https://www.google.com/maps/search/?api=1&query=あぢもり+鹿児島" 
+            },
+            { 
+                id: 3, 
+                name: "遊食豚彩 いちにぃさん 天文館店", 
+                desc: "蕎麥高湯黑豚涮涮鍋", 
+                lat: 31.590132, 
+                lng: 130.554904, 
+                type: "food", 
+                gmapUrl: "https://www.google.com/maps/search/?api=1&query=遊食豚彩+いちにぃさん+天文館店" 
+            },
+            { 
+                id: 4, 
+                name: "鹿児島ラーメン 豚とろ 天文館本店", 
+                desc: "入口即化豬頰肉拉麵", 
+                lat: 31.588806, 
+                lng: 130.553531, 
+                type: "food", 
+                gmapUrl: "https://www.google.com/maps/search/?api=1&query=鹿児島ラーメン+豚とろ+天文館本店" 
+            },
+            { 
+                id: 5, 
+                name: "こむらさき 天文館店", 
+                desc: "老字號清爽白湯拉麵", 
+                lat: 31.590396, 
+                lng: 130.555447, 
+                type: "food", 
+                gmapUrl: "https://www.google.com/maps/search/?api=1&query=こむらさき+天文館店" 
+            },
+            { 
+                id: 6, 
+                name: "天文館 吾愛人 本店", 
+                desc: "經典鄉土料理與關東煮", 
+                lat: 31.590684, 
+                lng: 130.554869, 
+                type: "food", 
+                gmapUrl: "https://www.google.com/maps/search/?api=1&query=天文館+吾愛人+本店" 
+            },
+            { 
+                id: 7, 
+                name: "天文館むじゃき 本店", 
+                desc: "白熊刨冰發源地 (打卡名店)", 
+                lat: 31.589136, 
+                lng: 130.555896, 
+                type: "food", 
+                gmapUrl: "https://www.google.com/maps/search/?api=1&query=天文館むじゃき+本店" 
+            },
+            { 
+                id: 8, 
+                name: "ホテル グランセレッソ鹿児島天文館", 
+                desc: "您的鹿兒島天文館住宿飯店", 
+                lat: 31.587813, 
+                lng: 130.553488, 
+                type: "hotel", 
+                gmapUrl: "https://www.google.com/maps/search/?api=1&query=ホテル+グランセレッソ鹿児島天文館" 
+            }
         ];
 
-        // 初始化地圖，設定中心點在天文館商圈中心
+        // 初始化地圖，預設中心點設定在天文館商圈核心
         const map = L.map('map', {
             zoomControl: false 
         }).setView([31.5895, 130.5548], 16);
 
-        // 將縮放控制器移到右下角
+        // 將地圖放大縮小按鈕移到右下角，避免遮擋
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-        // 載入 OpenStreetMap 圖資
+        // 載入優雅乾淨的 OpenStreetMap Voyager 圖資
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             maxZoom: 19
         }).addTo(map);
 
         const markers = {};
         const listContainer = document.getElementById('place-list');
 
-        // 在地圖上繪製標記並生成側邊欄清單
+        // 自動生成地圖標記與左側卡片清單
         places.forEach(place => {
             const markerClass = place.type === 'hotel' ? 'marker-hotel' : 'marker-food';
             
+            // 建立客製化數字圓圈圖示
             const customIcon = L.divIcon({
                 className: '',
                 html: `<div class="custom-marker ${markerClass}">${place.id}</div>`,
@@ -111,23 +176,24 @@
                 popupAnchor: [0, -15]
             });
 
+            // 在地圖上加上標記
             const marker = L.marker([place.lat, place.lng], { icon: customIcon }).addTo(map);
             
-            // 彈出視窗內容 (加入 Google Maps 連結)
+            // 點擊標記時彈出的泡泡視窗內容 (含 Google 地圖按鈕)
             const popupContent = `
-                <div class="text-center p-1 min-w-[150px]">
+                <div class="text-center p-1 min-w-[160px]">
                     <h3 class="font-bold text-gray-800 text-sm mb-1">${place.name}</h3>
                     <p class="text-xs text-gray-600 mb-3">${place.desc}</p>
                     <a href="${place.gmapUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-full px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 text-xs font-medium rounded transition-colors no-underline">
                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-                        Google Maps
+                        📍 開啟 Google Maps
                     </a>
                 </div>
             `;
             marker.bindPopup(popupContent);
             markers[place.id] = marker;
 
-            // 側邊欄清單項目 (加入 Google Maps 連結，並防止點擊連結時觸發地圖移動)
+            // 建立左側清單的卡片 HTML
             const listItem = document.createElement('div');
             listItem.className = 'p-3 bg-white border border-gray-100 rounded-lg shadow-sm cursor-pointer hover:bg-orange-50 hover:border-orange-200 transition-all duration-200 flex items-start space-x-4 transform hover:-translate-y-0.5';
             
@@ -142,11 +208,12 @@
                     <p class="text-xs text-gray-500 mt-1 mb-2">${place.desc}</p>
                     <a href="${place.gmapUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" class="inline-flex items-center text-xs text-blue-500 hover:text-blue-700 font-medium">
                         <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-                        在 Google Maps 查看
+                        在 Google Maps 中開啟
                     </a>
                 </div>
             `;
 
+            // 點擊卡片時，地圖會滑動過去並自動打開泡泡
             listItem.onclick = () => {
                 map.setView([place.lat, place.lng], 18, {
                     animate: true,
@@ -162,4 +229,6 @@
     </script>
 </body>
 </html>
-```eof
+
+
+```
