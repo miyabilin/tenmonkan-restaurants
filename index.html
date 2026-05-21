@@ -24,10 +24,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
             border: 2.5px solid white;
             font-size: 14px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
         }
         .marker-food { background-color: #ef4444; } /* 紅色代表美食 */
         .marker-hotel { background-color: #3b82f6; } /* 藍色代表住宿 */
@@ -70,93 +70,85 @@
     <!-- 引入 Leaflet 地圖套件 JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // 完整精確地點資料、經緯度以及真實 Google Maps 導航網址
+        // 【已更新】替換為料理特色描述，並使用最穩定的經緯度導航網址
         const places = [
             { 
                 id: 1, 
                 name: "とんかつ 丸一", 
-                desc: "厚切黑豚炸豬排 (排隊名店)", 
-                lat: 31.587396, 
-                lng: 130.553955, 
-                type: "food", 
-                gmapUrl: "https://www.google.com/maps/search/?api=1&query=とんかつ+丸一+鹿児島" 
+                desc: "嚴選鹿兒島黑豚，厚度驚人且肉汁鮮甜的極致炸豬排，外皮酥脆完美鎖住肉汁。", 
+                lat: 31.588556, 
+                lng: 130.551972, 
+                type: "food"
             },
             { 
                 id: 2, 
                 name: "あぢもり", 
-                desc: "黑豚涮涮鍋發源地", 
-                lat: 31.589689, 
-                lng: 130.555234, 
-                type: "food", 
-                gmapUrl: "https://www.google.com/maps/search/?api=1&query=あぢもり+鹿児島" 
+                desc: "黑豚涮涮鍋創始店，以獨門特調高湯涮煮，不需沾醬就能品嚐黑豚最純粹的鮮甜柔嫩。", 
+                lat: 31.589456, 
+                lng: 130.555028, 
+                type: "food"
             },
             { 
                 id: 3, 
-                name: "遊食豚彩 いちにぃさん 天文館店", 
-                desc: "蕎麥高湯黑豚涮涮鍋", 
-                lat: 31.590132, 
-                lng: 130.554904, 
-                type: "food", 
-                gmapUrl: "https://www.google.com/maps/search/?api=1&query=遊食豚彩+いちにぃさん+天文館店" 
+                name: "遊食豚彩 いちにぃさん", 
+                desc: "特色蕎麥麵高湯搭配柚子胡椒的黑豚涮涮鍋，風味清爽解膩，收尾的蕎麥麵更是絕配。", 
+                lat: 31.590176, 
+                lng: 130.554694, 
+                type: "food"
             },
             { 
                 id: 4, 
-                name: "鹿児島ラーメン 豚とろ 天文館本店", 
-                desc: "入口即化豬頰肉拉麵", 
-                lat: 31.588806, 
-                lng: 130.553531, 
-                type: "food", 
-                gmapUrl: "https://www.google.com/maps/search/?api=1&query=鹿児島ラーメン+豚とろ+天文館本店" 
+                name: "鹿児島ラーメン 豚とろ", 
+                desc: "採用珍貴豬頰肉製成入口即化的銷魂叉燒，湯頭濃郁卻不膩口，搭配滑順的中粗麵條。", 
+                lat: 31.587852, 
+                lng: 130.552220, 
+                type: "food"
             },
             { 
                 id: 5, 
-                name: "こむらさき 天文館店", 
-                desc: "老字號清爽白湯拉麵", 
-                lat: 31.590396, 
-                lng: 130.555447, 
-                type: "food", 
-                gmapUrl: "https://www.google.com/maps/search/?api=1&query=こむらさき+天文館店" 
+                name: "こむらさき", 
+                desc: "鹿兒島拉麵老字號，無添加大量豬脂的清爽特製白湯，搭配細麵與滿滿的高麗菜。", 
+                lat: 31.590391, 
+                lng: 130.555232, 
+                type: "food"
             },
             { 
                 id: 6, 
                 name: "天文館 吾愛人 本店", 
-                desc: "經典鄉土料理與關東煮", 
-                lat: 31.590684, 
-                lng: 130.554869, 
-                type: "food", 
-                gmapUrl: "https://www.google.com/maps/search/?api=1&query=天文館+吾愛人+本店" 
+                desc: "醇厚味噌熬煮的道地黑豚關東煮，以及新鮮「首折鯖魚」等地道鹿兒島鄉土料理。", 
+                lat: 31.590799, 
+                lng: 130.554865, 
+                type: "food"
             },
             { 
                 id: 7, 
                 name: "天文館むじゃき 本店", 
-                desc: "白熊刨冰發源地 (打卡名店)", 
+                desc: "鹿兒島名物「白熊刨冰」發祥地，綿密剉冰淋上秘製牛奶糖漿，點綴豐富新鮮水果。", 
                 lat: 31.589136, 
                 lng: 130.555896, 
-                type: "food", 
-                gmapUrl: "https://www.google.com/maps/search/?api=1&query=天文館むじゃき+本店" 
+                type: "food"
             },
             { 
                 id: 8, 
-                name: "ホテル グランセレッソ鹿児島天文館", 
-                desc: "您的鹿兒島天文館住宿飯店", 
-                lat: 31.587813, 
-                lng: 130.553488, 
-                type: "hotel", 
-                gmapUrl: "https://www.google.com/maps/search/?api=1&query=ホテル+グランセレッソ鹿児島天文館" 
+                name: "ホテル グランセレッソ", 
+                desc: "您的住宿地點，交通便利的現代化飯店，為您的鹿兒島美食之旅提供舒適的休息空間。", 
+                lat: 31.588075, 
+                lng: 130.552601, 
+                type: "hotel"
             }
         ];
 
-        // 初始化地圖，預設中心點設定在天文館商圈核心
+        // 初始化地圖
         const map = L.map('map', {
             zoomControl: false 
-        }).setView([31.5895, 130.5548], 16);
+        }).setView([31.5893, 130.5539], 16);
 
-        // 將地圖放大縮小按鈕移到右下角，避免遮擋
+        // 將地圖放大縮小按鈕移到右下角
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-        // 載入優雅乾淨的 OpenStreetMap Voyager 圖資
+        // 載入 OpenStreetMap 圖資
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             maxZoom: 19
         }).addTo(map);
 
@@ -166,6 +158,9 @@
         // 自動生成地圖標記與左側卡片清單
         places.forEach(place => {
             const markerClass = place.type === 'hotel' ? 'marker-hotel' : 'marker-food';
+            
+            // 【終極修復】：使用最原始的 Google Maps 經緯度參數，保證所有裝置皆可開啟定位
+            const gmapUrl = `https://www.google.com/maps?q=${place.lat},${place.lng}`;
             
             // 建立客製化數字圓圈圖示
             const customIcon = L.divIcon({
@@ -177,14 +172,18 @@
             });
 
             // 在地圖上加上標記
-            const marker = L.marker([place.lat, place.lng], { icon: customIcon }).addTo(map);
+            const markerOptions = { icon: customIcon };
+            if (place.type === 'hotel') {
+                markerOptions.zIndexOffset = 1000; 
+            }
+            const marker = L.marker([place.lat, place.lng], markerOptions).addTo(map);
             
-            // 點擊標記時彈出的泡泡視窗內容 (含 Google 地圖按鈕)
+            // 點擊標記時彈出的泡泡視窗內容
             const popupContent = `
-                <div class="text-center p-1 min-w-[160px]">
+                <div class="text-center p-1 min-w-[160px] max-w-[200px]">
                     <h3 class="font-bold text-gray-800 text-sm mb-1">${place.name}</h3>
-                    <p class="text-xs text-gray-600 mb-3">${place.desc}</p>
-                    <a href="${place.gmapUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-full px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 text-xs font-medium rounded transition-colors no-underline">
+                    <p class="text-xs text-gray-600 mb-3 leading-relaxed">${place.desc}</p>
+                    <a href="${gmapUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-full px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 text-xs font-medium rounded transition-colors no-underline">
                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
                         📍 開啟 Google Maps
                     </a>
@@ -205,8 +204,8 @@
                 </div>
                 <div class="flex-1">
                     <h3 class="font-bold text-gray-800 text-sm md:text-base leading-tight">${place.name}</h3>
-                    <p class="text-xs text-gray-500 mt-1 mb-2">${place.desc}</p>
-                    <a href="${place.gmapUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" class="inline-flex items-center text-xs text-blue-500 hover:text-blue-700 font-medium">
+                    <p class="text-xs text-gray-500 mt-1 mb-2 leading-relaxed">${place.desc}</p>
+                    <a href="${gmapUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" class="inline-flex items-center text-xs text-blue-500 hover:text-blue-700 font-medium">
                         <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
                         在 Google Maps 中開啟
                     </a>
